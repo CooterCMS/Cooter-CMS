@@ -1,0 +1,502 @@
+html, body{
+	font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
+	width:100%;
+	height:100%;
+	color:#FFF;
+	background:#000;
+	margin:0;
+	padding:0;	
+}
+#adminBar{
+	background: #e2e2e2; /* Old browsers */
+background: -moz-linear-gradient(top,  #e2e2e2 0%, #dbdbdb 50%, #d1d1d1 51%, #fefefe 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e2e2e2), color-stop(50%,#dbdbdb), color-stop(51%,#d1d1d1), color-stop(100%,#fefefe)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #e2e2e2 0%,#dbdbdb 50%,#d1d1d1 51%,#fefefe 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e2e2e2', endColorstr='#fefefe',GradientType=0 ); /* IE6-9 */
+}
+#container {
+   min-height:100%;
+   min-width:320px;
+   position:relative;
+}
+/* Flexible iFrame */
+
+.Flexible-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 30px;
+    height: 0;
+    overflow: hidden;
+}
+
+.Flexible-container iframe,   
+.Flexible-container object,  
+.Flexible-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+#wrap{
+	width:100%;
+	margin:0 auto;
+}
+#header{
+	width:100%;
+	min-width:320px;
+	height:100px;
+}
+#headerWrap{
+	max-width:1024px;
+	min-width:440px;
+	margin:0 auto;
+}
+#pageWrap{
+	float: left;
+	max-width:98%;
+	min-width:12%;
+	padding:5px;
+	margin:0px 3px 3px 3px;
+}
+#logo{
+	position:relative;
+	width:320px;
+	height:90px;
+}
+#yellow-truck {
+	background:url(http://www.valleywestcornerstore.com/assets/images/yellow-pickup-icon.png) no-repeat;
+	width:130px;
+	height:100px;
+	margin:0;
+	padding:0;
+	position:relative;
+	top:-10px;
+	left:100px;
+	
+}
+#socialIcons{
+	position:relative;
+	max-width:356px;
+	top:3px;
+	right:10px;
+
+}
+#socialIcons ul li{
+	margin-left: 15px;
+}
+#menu{
+	position:relative;
+	top:0px;
+	width:100%;
+	min-height:46px;
+	background:#E3E3E3;
+}
+#menuWrap{
+	max-width:1005px;	
+	min-height:46px;
+	margin:0 auto;
+}
+#menuWrap a{
+	color:#777777;
+}
+
+#content{
+	max-width:994px;
+	min-width:320px;
+	min-height:600px;
+	margin:20px auto 20px;
+	background:#F1F2F2;
+	border-radius: 15px 15px;
+	color: #000000;
+	
+}
+.content-footer{
+	width:100%;
+	height:30px;
+	border-top:thin solid #000;
+	padding:;
+}
+#breadcrumb{
+	font-size:10px;
+	color:#000;
+	font-style:italic;
+	border-bottom: thin solid #000;
+	max-width:98%;
+	min-width:12%;
+	padding:5px;
+	margin:0px 3px 3px 3px;
+}
+
+/**
+ * 	Welcome Page
+ */
+#slides{
+	width:100%;
+}
+.slidesjs-pagination{
+	display:none;
+}
+.slidesjs-navigation{
+	position:relative;
+	left:11%;
+	top:0px;
+	margin:0 12%;
+}
+.slidesjs_slide{
+
+}
+.slideWrap{
+	background-color:#FFFFFF;
+	margin:25px auto;
+	border:thin solid #000;
+	border-radius:5px;
+	box-shadow:0px 0px 8px #000;
+	max-height:198px;
+	max-width:450px
+}
+.slideWrap img{
+	width:100%;
+	height:100%;
+}
+.service-box-wrap{
+	width:275px;
+	margin:30px 25px;
+}
+h2.service-title{
+	font-size:12pt;
+	font-weight:100;
+	margin:0;
+	position:relative;
+	left:15px;
+	bottom:5px;
+}
+.service-box{
+	width:275px;
+	height:185px;
+	background-color:#FFFFFF;
+	-moz-box-shadow: 3px 3px 15px #000;
+	-webkit-box-shadow: 3px 3px 15px #000;
+	box-shadow: 3px 3px 15px #000;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=15, Direction=135, Color='#000000')";
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=15, Direction=135, Color='#000000');
+	border-radius:6px 6px
+}
+
+.service-box img{
+	position:relative;
+	top:10px;
+	left:12.5px;
+	width:250px; 
+	height:80px;
+}
+.service-box .divider{
+	margin:15px auto;
+	width:250px;
+	height:1px;
+	background-color:#000;
+}
+.service-box p{
+	font-size:9pt;
+	margin:0 10px;
+	min-height:50px;
+	max-height:50px;
+}
+.service-box a{
+	font-size:8pt;
+	color:#ED1C24 !important;
+	position:relative;
+	left:75%;
+		
+}
+.service-box a:hover{
+	color:#620407;
+
+}
+
+
+.maintenance-box-wrap{
+	width:400px;
+	margin:30px 25px;
+}
+h2.maintenance-title{
+	font-size:12pt;
+	font-weight:100;
+	margin:0;
+	position:relative;
+	left:15px;
+	bottom:5px;
+}
+.maintenance-box{
+	width:400px;
+	height:185px;
+	background-color:#FFFFFF;
+	-moz-box-shadow: 3px 3px 15px #000;
+	-webkit-box-shadow: 3px 3px 15px #000;
+	box-shadow: 3px 3px 15px #000;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=15, Direction=135, Color='#000000')";
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=15, Direction=135, Color='#000000');
+	border-radius:6px 6px
+}
+.maintenance-box img{
+	position:relative;
+	top:10px;
+	left:12.5px;
+	width:375px; 
+	height:80px;
+}
+.maintenance-box .divider{
+	margin:15px auto;
+	width:375px;
+	height:1px;
+	background-color:#000;
+}
+.maintenance-box p{
+	font-size:9pt;
+	margin:0 10px;
+	min-height:50px;
+	max-height:50px;
+}
+.maintenance-box a{
+	font-size:8pt;
+	color:#ED1C24 !important;
+	position:relative;
+	left:75%;
+		
+}
+.maintenance-box a:hover{
+	color:#620407;
+
+}
+
+div #footer{
+   	width:100%;  	
+	min-height:280px;
+	background-color:#000000;
+	color:#FFFFFF;
+	
+}	
+#footerWrap{
+	width:1024px;
+	min-width:440px;
+	margin:0 auto;
+}
+#footerNav{
+	position:relative;
+}
+#footerNav ul{
+	list-style: none;
+	
+}
+#footerNav ul li{
+	font-size:12px;
+	font-weight:100;
+	
+}
+div #footerNav .footerMenu-a-title, div #footerNav .footerMenu-b-title, div #footerNav  .footerMenu-c-title{
+	text-indent:-10px;
+	position:relative;
+	top:-10px;
+	text-align:left;
+	font-size:14px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight:700;
+	margin-bottom:10px;
+	
+}
+
+.footerMenu-a-title{}
+.footerMenu-b-title{}
+.footerMenu-c-title{}
+
+div #footer #legal{
+	position: relative;
+	top:11px;
+	left:20px;
+	font-size:10px;
+	width:90%;
+}
+  	#legal .copyright{
+  		width:70%;
+  	}
+	#legal ul{
+		list-style: none;
+		margin:0;
+		padding:0;
+	}
+	#legal ul li{
+		float:left;
+		
+	}
+	#legal ul li::after{
+		margin:0 10px;
+		content: "|";
+	}
+
+.bottom{
+	position:absolute;
+	bottom:0;
+	width:900px;
+}
+
+/*************
+ * 
+ * 	Coupons
+ * 
+ *************/
+
+.coupon-button img{
+	margin-left:0px;
+	position:relative;
+	left:0px;
+	padding:0;
+	max-width:490px;
+	max-height:250px;
+}
+div.coupon-container{
+	width:100%;
+}
+div.coupon-button{
+	margin-left:0px;
+	position:relative;
+	left:0px;
+	padding:0;
+	width:490px;
+	height:250px;
+	background: url(http://www.valleywestcornerstore.com/assets/images/coupon-button.png) no-repeat;
+}
+div.coupon-button:hover{
+	background: url(http://www.valleywestcornerstore.com/assets/images/coupon-button-hover.png) no-repeat;	
+}
+div.season-special{
+	margin-left:0px;
+	position:relative;
+	left:0px;
+	padding:0;
+	width:490px;
+	height:250px;
+	background: url(http://www.valleywestcornerstore.com/assets/images/summer-season-special.png) no-repeat;
+}
+
+#appointment{
+	padding:20px 0px 20px 0px;
+}
+#appointment a{
+	color:#1c75bc;
+}
+#appointment .appointment-note p{
+	position:relative;
+	left:40px;
+	font-size:12px;
+	width:400px;
+	padding-left:10px;
+} 
+#appointment p:first-letter{
+	font-size:12px;
+}
+#appointment h2{
+	padding-left:8px;
+}
+#appointment form div{
+	width:40%;
+}
+#appointment ul{
+	list-style:none;
+}
+
+#appointment li.checkbox {
+	position:relative;
+	top:3px;
+	padding-left:5px;
+	
+}
+#appointment ul li.checkbox-label{
+	text-align:left;text-indent:-10px;
+}
+
+#appointment textarea{
+	position:relative;
+	top:5px;
+	right:4px;
+	resize:none;
+	font-size:12px;
+	width:300px;
+	max-width:300px;
+	height:100px;
+	max-height:100px;
+	padding:2px;
+	border-radius: none;
+	background:#FFF;
+	border:thin solid #BFBFBF;
+}
+#appointment label{
+	position:relative;
+	top:5px;
+	padding-left:10px;
+	font-size: 12px;
+}
+#appointment li.half-width input{
+	position:relative;
+	right:124px;
+	width:100px;
+}
+#appointment li.submit input{
+	background:#777777;
+	border:1px solid #000;
+	color:#FFFFFF;
+	box-shadow: 3px 3px 12px #cccccc;
+	padding:5px;
+}
+#appointment li.submit input:hover{
+	background:#666666;
+	box-shadow: 3px 3px 12px #000;
+}
+#appointment li select{
+	width:230px;	
+}
+#appointment input, #appointment select{
+	padding:2px;
+	border-radius: none;
+	background:#FFF;
+	border:thin solid #BFBFBF;
+	margin:5px;
+}
+ul li.error{
+	display:none;
+	background:#005580;
+	color:#FFF;
+	border-radius: 3px 3px;
+	width:100%;
+	padding:0;
+	margin:0;
+}
+ul li.error p{
+	font-size:12px;
+	
+	text-align:left;
+	padding:8px 5px;
+	margin:0 auto;
+}
+
+.hide{
+	display:none;
+}
+	
+#built-by{
+	position:relative;
+
+	width:160px;
+	height:20px;
+	font-size:10px;
+	color:#FEA800;
+}
+#built-by a{
+	color:#FEA800;
+}
+#built-by a:hover{
+	color:#FEA800;
+	text-shadow:2px 1px 5px #FEA800;
+}

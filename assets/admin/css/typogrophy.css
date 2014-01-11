@@ -1,0 +1,76 @@
+/**
+ * 	Typogrophy
+ */
+
+h1, h2, h3, h4, h5, h6{
+	/*font-family: 'Sonsie One', cursive;*/
+	margin:0;
+	padding:0;
+}
+h3{
+  color:#005580;
+  
+  margin-top:10px;
+}
+h4{
+  color:#005580;
+  border-bottom:thin solid #000;
+  margin-top:10px;
+}
+h1.title{
+	position:relative;
+	left:5px;
+	font-size:16px;
+	text-shadow:3px 3px 5px #000;
+	color:#FFFFFF;
+}
+h1.title span{
+	font-size:10px;
+	position:relative;
+	left:5px;
+}
+.title{
+	position:relative;
+	top:8px;
+	float:left;
+	font-family:"Bodoni MT Condensed";
+}
+
+.even{
+	background-color:#CCCCCC;
+}
+.hide{
+	display:none;
+}
+a{
+	color:#FFFF00;
+	text-decoration: none;		
+}
+
+table img{
+	max-width:500px;
+	max-height:500px;
+}
+
+.clearfix{clear:both;}
+.left{float:left;}
+.right{float:right;}
+
+
+#addVehicleFormWrap form{
+width:600px;
+}
+
+#addVehicleFormWrap form select{
+    margin:0px 0 10px 0;
+    
+}
+#addVehicleFormWrap form label{
+    margin:5px;
+}
+
+#addVehicleFormWrap form input{
+    width:255px;
+    margin-right:180px;
+}
+

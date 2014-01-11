@@ -1,0 +1,416 @@
+/*Styles for screen 600px and larger but not above 1024px */
+@media screen and (min-width: 600px) {
+	#appointment ul li.checkbox-label{
+	width:90%;
+	}
+	#slides{
+		max-width:490px;
+	}
+	.slideWrap{
+		height:198px;
+		width:450px
+	}
+	#header{
+		background:url(http://www.valleywestcornerstore.com/assets/images/header.png) repeat-x ;
+	}
+	#menu{
+		min-width:1024px;
+	}
+	#menuWrap{
+		min-width:1005px;
+	}
+	#header{
+		min-width:1024px;
+	}
+	#headerWrap{
+		min-width:1024px;
+		margin:0 auto;
+	}
+	#logo{
+		background:url(http://www.valleywestcornerstore.com/assets/images/vwcs-320-banner-blue-logo-trans-3.png) no-repeat;
+		top:-3px;
+		left:5px;
+		width:320px;
+		height:100px;
+	}
+	#content{
+		width:994px;
+	}	
+	
+	#footerNav{
+		
+	}
+	#footerNav ul.footerMenu-a{
+	position:relative;
+	left:10px;
+	}
+	#footerNav ul.footerMenu-b{
+		position:relative;
+		left:40px;
+	}
+	#footerNav ul.footerMenu-c{
+		position:relative;
+		left:140px;
+	}
+	#footer{
+		background:url(http://www.valleywestcornerstore.com/assets/images/footer.png) repeat-x;
+		min-width:1024px;
+	}
+	img.store{
+		width:357px;
+		height:258px;
+	}
+	div.left-text{
+		float:left;
+		width:60%;
+	}
+	div.right-text{
+		float:right;
+		width:60%;
+	}
+	.print-coupon{
+		min-width:455px;
+	}
+
+}
+
+/*Styles for screen 600px and lower*/
+@media screen and (max-width: 600px) {
+	.coupon-button img{
+	margin-left:0px;
+	position:relative;
+	left:0px;
+	padding:0;
+	max-width:100%;
+	max-height:100%;
+}
+	#appointment form div{
+		width:100%;
+	}
+	div.coupon-button{
+	margin-left:0px;
+	position:relative;
+	left:0px;
+	padding:0;
+	width:490px;
+	height:250px;
+	background: url(http://www.valleywestcornerstore.com/assets/images/coupon-button.png) 200px no-repeat;
+	}	
+	#slides{
+		min-width:300px;
+		padding:0;
+		margin:0 auto;
+		float:left;
+	}
+	#header{
+		background:#000000;
+	}
+	h1.header-text-logo{
+		display:none;
+	}
+	nav { 
+  		height: auto;
+  	}
+  	nav ul {
+  		width: 100%;
+  		display: block;
+  		height: auto;
+  	}
+  	nav li {
+  		width: 100%;
+  		float: left;
+  		position: relative;
+  	}
+  	nav li a {
+
+	}
+  	nav a {
+	  	text-align: left;
+	  	width: 100%;
+	  	text-indent: 25px;
+  	}
+  	#yellow-truck{
+  		display:none;
+  		width:0;
+  		height:0;
+  	}
+	#logo{
+		background:url(http://www.valleywestcornerstore.com/assets/images/vwcs-320-banner-blue-logo-trans-3.png) no-repeat;
+		top:0px;
+		left:5px;
+		width:320px;
+		height:100px;
+	}
+  	div #footer{
+		height:580px; 
+		width:100%;
+		padding:10px 0px; 		
+  	}
+  	#footer #legal{
+  		margin:10px;
+  	}
+  	#footer #legal ul li{
+  		float:none;
+  		margin:5px 0;
+  	}
+  	#footer #legal ul li::after{
+		content:""; 
+  	}
+	
+	#footerWrap{
+		width:100%;
+		min-width:300px;
+		min-height:100%;
+		margin:0 auto;
+	}
+	#footerNav{
+		
+			border-top:thin solid #FFAC00;
+			border-bottom:thin solid #FFAC00;
+	}
+	div #footerNav .footerMenu-a-title, 
+	div #footerNav .footerMenu-b-title, 
+	div #footerNav .footerMenu-c-title{
+		top:0;
+	}
+	#footerNav ul.footerMenu-a{
+		
+		float:none;
+
+	}
+	#footerNav ul.footerMenu-b{
+		
+		float:none;
+
+	}
+	#footerNav ul.footerMenu-c{
+		
+		float:none;
+
+	}
+	li.linkedin, li.twitter{
+		display: none;
+	}
+	#socialIcons{
+		max-width:200px;
+	}
+
+	.bottom{
+		width:90%;
+		padding:10px;
+	}
+	#built-by{
+		top:-15px;
+	}
+	
+	img.store{
+		width:100%;
+		height:100%;
+	}
+}
+
+/*Styles for screen 600px and lower*/
+@media screen and (max-width: 550px) {
+.print-coupon{
+	width:80%;
+}
+#couponHeader{
+	display:none;
+}
+
+	div.left-text{
+		float:left;
+		width:100%;
+	}
+	div.right-text{
+		float:left;
+		width:100%;
+	}
+	li.linkedin, li.twitter, li.google{
+		display: none;
+	}
+	#socialIcons{
+		max-width:120px;
+	}
+}
+
+/* ************* */
+
+nav ul {
+	padding: 0;
+	margin: 0 auto;
+	width: 100%;
+	height: 40px;
+}
+nav li {
+	display: inline;
+	float: left;
+}
+#menuWrap nav a {
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	font-family:arial;
+	font-size:16px;
+	font-weight:bold;
+	padding:12px 13.7px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+
+}
+#menuWrap nav li a {
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+}
+nav li:last-child a {
+	border-right: 0;
+}
+#menuWrap nav a:hover, #menuWrap nav a:active {	
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}
+nav a#pull {
+	display: none;
+}
+
+/* ************* */
+
+/*Styles for screen 515px and lower*/
+@media only screen and (max-width : 480px) {
+	
+	.service-box a{
+		top:-2px;
+	}
+	nav {
+		width:100%;
+		border-bottom: 0;
+	}
+	nav ul {
+		display: none;
+		height: auto;
+	}
+	nav a#pull {
+		display: block;
+		background-color: #283744;
+		width: 93%;
+		position: relative;
+	}
+	nav a#pull:after {
+		content:"";
+		background: url('http://www.valleywestcornerstore.com/assets/images/nav-icon.png') no-repeat;
+		width: 30px;
+		height: 30px;
+		display: inline-block;
+		position: absolute;
+		left:90%;
+		top: 10px;
+	}
+	div.season-special{
+		width:300px;
+		height:180px;
+		background: url(http://www.valleywestcornerstore.com/assets/images/summer-season-special-small.png) no-repeat;
+	}	
+
+	li.linkedin, li.twitter, li.google{
+		display: none;
+	}
+	#socialIcons{
+		width:120px;
+		position:absolute;
+		right:-2%;
+	}
+	
+	img.store{
+		width:90%;
+		height:90%;
+	}
+	ul li.error{
+		width:100%;
+	}
+	
+	#appointment .drop-off{
+		position:relative;
+		left:10px;
+		text-indent:-10px;
+		width:90%;
+	}	
+	#appointment li.checkbox-label{
+		position:relative;
+		top:-25px;
+		left:30px;
+		float:left;
+		clear:both;
+	}	
+	#appointment .appointment-note p{
+		width:80%;
+	}
+	#appointment ul li.checkbox-label{
+		position:relative;
+		top:-25px;
+		left:30px;
+		width:70%;
+	}		
+
+}
+
+/*Smartphone*/
+@media only screen and (max-width : 340px) {
+	
+	#appointment li.half-width input{
+		position:relative;
+		top:0px;
+		left:0px;	
+	}
+	#appointment textarea{
+		position:relative;
+		left:5px;
+		width:224px;
+		margin-bottom:10px;
+	}	
+	#appointment ul{
+		float:left;
+		clear:both;
+	}
+	#appointment ul li{
+		float:left;
+		clear:both;
+	}
+	#appointment ul li.checkbox-agree{
+		position:relative;
+		top:-25px;
+		left:30px;
+	}
+	#appointment hr{
+		width:98%;
+		float:left:
+		clear:both;
+	}
+
+	#logo{
+		left:-8px;
+		top:-2px;
+	}
+	#socialIcons{
+		display: none;
+		width:0;
+		height:0;
+	}
+	nav li {
+		display: block;
+		float: none;
+		width: 100%;
+	}
+	nav li a {
+		border-bottom: 1px solid #576979;
+	}
+	
+}

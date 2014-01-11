@@ -1,0 +1,11 @@
+#header, #menu, #footer, #couponHeader, .mailing-list{
+	display:none;
+}
+.print-coupon{
+	width:80%;
+	height:80%;
+	border:dotted #000000;
+}
+.print-trans-box{
+	opacity:1.0;
+}
