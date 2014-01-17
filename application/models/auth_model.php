@@ -58,6 +58,10 @@ class Auth_model extends CI_Model{
 	private $is_admin		= FALSE;
 	private $user_role		= FALSE;
 	
+	private	$is_account_registered = FALSE;
+	private $is_account_active = FALSE;
+	private	$is_account_locked =FALSE;
+	
 	public function __construct(){
 		parent::__construct();
 		
@@ -65,8 +69,10 @@ class Auth_model extends CI_Model{
 		$this->is_logged_in = $this->is_logged_in();
 		
 		$this->load->library('bcrypt');
-		
-		$this->is_admin = $this->is_admin($this->session->userdata('username'));
+		/**
+		 * bug
+		 */
+		//$this->is_admin = $this->is_admin($this->session->userdata('username'));
 	}
 	/**
 	 * php.net
@@ -101,7 +107,7 @@ class Auth_model extends CI_Model{
  	   }
     }
 	
-	public function is_admin($username){
+	private function is_admin($username){
 		if($this->is_logged_in()){
 				
 			$sql = 'SELECT role FROM Users WHERE username = ? LIMIT 1';
@@ -123,6 +129,76 @@ class Auth_model extends CI_Model{
 			return FALSE;
 		}	
 	}
+	
+	public function is_account_registered(){
+				
+		if($this->username){
+		    
+			$this->db->where('username', $this->username);
+			$this->db->from('Users');
+			$result = $this->db->count_all_results();
+			
+			return ($result == 1) ? TRUE:FALSE;
+			
+		}
+	}
+	
+	public function is_account_active(){
+		if($this->username){
+			
+			$this->db->select('active');			    
+			$this->db->where('username', $this->username);
+			$result = $this->db->get('Users', 1);
+		  
+		  if($result->num_rows() == 1){
+			foreach($result->result() as $val){
+				return $this->strictBool($val->active);
+			}
+		  }else{
+			return FALSE;
+		  }
+		  
+		}
+	}
+	public function is_account_locked(){
+		if($this->username){
+			
+			$this->db->select('locked');			    
+			$this->db->where('username', $this->username);
+			$result = $this->db->get('Users', 1);
+		  
+		  if($result->num_rows() == 1){
+			foreach($result->result() as $val){
+				return $this->strictBool($val->locked);
+			}
+		  }else{
+			return TRUE;
+		  }
+		  
+		}
+	}
+	/**
+	 * Validate Password 
+	 */	
+    private function validate_user(){
+		
+		$bcrypt = new Bcrypt(15);
+		
+		$account_sql = "SELECT password FROM Users WHERE username = ? LIMIT 1";
+		$account_data = $this->db->query($account_sql, array($this->username));
+		
+		if($account_data->num_rows() == 1){
+		
+		  foreach($account_data->result() as $row){		  	
+			$verify = $bcrypt->verify($this->password, $row->password);
+			 return ($verify !== FALSE) ? TRUE:FALSE;
+			 exit;
+		  }
+		  
+		}		
+		return FALSE;
+		exit;
+    }		
 	/**
 	 * Checks current user role
 	 * @var string
@@ -147,43 +223,128 @@ class Auth_model extends CI_Model{
 			return FALSE;
 		}
 	}
-	
+	/**
+	 * Set the user session data
+	 */ 
+	private function auth_set_session_data(){
+		if(isset($this->username)){
+	  	  $new_data = array(
+	  	   	'username' => $this->username,
+	        'is_logged_in' => TRUE
+	      );
+	      $this->session->set_userdata($new_data);
+		}
+	}
 	public function login($post_data){
-		if($this->allow_login()){
 			
-		if(isset($post_data) && (is_object($post_data)) ){
-				
-			$this->username = $post_data->username;
-			$this->password = $post_data->password;
-			
-			$this->validate_user();
+		// New returnable obj	
+		$return_data = new stdClass;
+		$return_data->login_valid = FALSE;
+        $return_data->post_data = $post_data;
+		$return_data->error_code = '500.1';
+		$return_data->error_message = 'Login';
+		$return_data->theme = '';
+		$return_data->page  = 'login';
+		  
+		if(!isset($post_data) || !isset($post_data->username) || !isset($post_data->password)){
+		  $return_data->login_valid = FALSE;
+		  $return_data->post_data = $post_data;
+		  $return_data->error_code = '500.2';
+		  $return_data->error_message = 'Invalid data type!';
+		  $return_data->theme = '';
+		  $return_data->page  = '';
+		  return $return_data;
+		  exit;
+		}else{
+		
+		  // Check if login is allowed	
+		  if(!$this->allow_login()){
+			$return_data->login_valid = FALSE;
+		    $return_data->post_data = $post_data;
+		    $return_data->error_code = '500.3';
+		    $return_data->error_message = 'Login Disabled!';
+		    $return_data->theme = '';
+		    $return_data->page  = 'login_disabled';
+			return $return_data;
+			exit;
+		  }else{
+		  	
+		  // Post data
+		  $this->username = $post_data->username;
+		  $this->password = $post_data->password;
 
-			if($this->validate_user !== FALSE){
+		    // Check if account is registered
+		    if(!$this->is_account_registered()){
+		      $return_data->login_valid = FALSE;	
+		      $return_data->post_data = $post_data;
+		      $return_data->error_code = '500.4';
+		      $return_data->error_message = 'Account not registered!';
+		      $return_data->theme = '';
+		      $return_data->page  = 'register';
+			  return $return_data;
+			  exit;
+		    }	
+					    			
+		    // Check if account is active
+		    if(!$this->is_account_active()){
+		      $return_data->login_valid = FALSE;	
+		      $return_data->post_data = $post_data;
+		      $return_data->error_code = '500.5';
+		      $return_data->error_message = 'Account not active!';
+		      $return_data->theme = '';
+		      $return_data->page  = 'account_activate';
+			  return $return_data;
+			  exit;
+		    }
+
+			// Check if user account is locked
+		  	if($this->is_account_locked()){
+		  	  $return_data->login_valid = FALSE;
+		      $return_data->post_data = $post_data;
+		      $return_data->error_code = '500.6';
+		      $return_data->error_message = 'Account is locked!';
+		      $return_data->theme = '';
+		      $return_data->page  = 'account_locked';
+			  return $return_data;
+			  exit;
+		  	}
 			
-				$new_data = array(
-					'username' => $post_data->username,
-					'is_logged_in' => TRUE
-				);
-				$this->session->set_userdata($new_data);
-				
-				return TRUE;
+			// Check if user account is valid
+		  	if(!$this->validate_user()){
+		  	  $return_data->login_valid = FALSE;
+		      $return_data->post_data = $post_data;
+		      $return_data->error_code = '500.7';
+		      $return_data->error_message = 'Account password incorect!';
+		      $return_data->theme = '';
+		      $return_data->page  = 'login';
+			  return $return_data;
+			  exit;
+		  	}else{
+		  		
+		  	  // Log them in	
+			  $this->auth_set_session_data();
+		  	  $return_data->login_valid = TRUE;
+		  	  $return_data->post_data = $post_data;
+			  $return_data->error_code = '500.8';
+			  $return_data->error_message = 'Login';
+			  $return_data->theme = '';
+			  $return_data->page = '';
+			  return $return_data;
+			  exit; 
+		  	}
 			
-			}else{
-				
-				return FALSE;
-			}
-			
-		}else{
-			return FALSE;
+		  }
+		
 		}
 		
-		}else{
-			return FALSE;
-		}
-		
+		return $return_data;
+		exit;
 	}
 	
 	public function add_user($data){
+	 		
+	 	// use bcrypt
+	 	// Else use php_hash();
 	 	
 	 if(is_object($data)){
 	 			  	
@@ -230,6 +391,7 @@ class Auth_model extends CI_Model{
 	 }	
 									
 	}
+	
 	private function user_exsist(){
 		$sql = 'SELECT * FROM Users WHERE Username = ? LIMIT 1';
 		$query_data = $this->db->query($sql, $this->username);
@@ -247,10 +409,9 @@ class Auth_model extends CI_Model{
 		$insert_data->username  = $this->username;
 		$insert_data->password  = $this->password_hash;
 		$insert_data->role 		= $this->user_role;
-		$this->db->insert('Users', $insert_data);	
+		$this->db->insert('Users', $insert_data);
 	}
 		
-	
 	/**
 	 * Create a secures password using bcrypt
 	 * 
@@ -263,26 +424,7 @@ class Auth_model extends CI_Model{
         $this->password_crypted = $bcrypt->verify($this->password, $this->password_hash);
 
 	}
-	/**
-	 * Validate Password 
-	 */	
-    private function validate_user(){
-		
-		$bcrypt = new Bcrypt(15);
-		
-		$account_sql = "SELECT password FROM Users WHERE username = ? LIMIT 1";
-		$account_data = $this->db->query($account_sql, array($this->username));
-		
-		if($account_data->num_rows() == 1){
-		
-		  foreach($account_data->result() as $row){
-		  	
-			$this->validate_user = $bcrypt->verify($this->password, $row->password);
-			  
-		  }
-		  
-		}
-    }	
+
 	   /**
     * Set a Form Submit Log
     * @param $form 

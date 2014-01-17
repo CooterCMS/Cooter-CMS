@@ -63,7 +63,9 @@ class Auth extends CI_Controller{
 	 * Login
 	 */		
    public function login(){
-			
+		
+	$post_data = new stdClass;
+
    	// Set Form Submit	 
 	$this->auth_model->set_form_submit('Login');
 	
@@ -144,21 +146,13 @@ class Auth extends CI_Controller{
 					
 			  // Try to login user
 			  
+			  
 				// Login user 		
-				$this->is_logged_in = $this->auth_model->login($post_data);
+				$return_data = $this->auth_model->login($post_data);					
 				
-				 if($this->is_logged_in){ 				
-		
-					redirect(base_url());
-
-				 }else{
-					
-						// Load the theme	
-					$this->theme_model->load_theme('default');   
-					$template_data = $this->template->load($this->template->get_template_dir().'login');
-
-				 }
-				 
+				// Load the theme	
+				$this->theme_model->load_theme($return_data->theme);   
+				$template_data = $this->template->load($this->template->get_template_dir().$return_data->page);
 				$this->load->view($template_data->template, $template_data);
 
 			}// End form Validataion
