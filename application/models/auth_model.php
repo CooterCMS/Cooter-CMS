@@ -130,7 +130,7 @@ class Auth_model extends CI_Model{
 		}	
 	}
 	
-	public function is_account_registered(){
+	private function is_account_registered(){
 				
 		if($this->username){
 		    
@@ -143,7 +143,7 @@ class Auth_model extends CI_Model{
 		}
 	}
 	
-	public function is_account_active(){
+	private function is_account_active(){
 		if($this->username){
 			
 			$this->db->select('active');			    
@@ -160,7 +160,7 @@ class Auth_model extends CI_Model{
 		  
 		}
 	}
-	public function is_account_locked(){
+	private function is_account_locked(){
 		if($this->username){
 			
 			$this->db->select('locked');			    
@@ -235,102 +235,114 @@ class Auth_model extends CI_Model{
 	      $this->session->set_userdata($new_data);
 		}
 	}
+	/**
+	 * Returns some basic data such as which page to load
+	 * 
+	 */
+	private function get_page_data($type, $name){
+	    $this->db->where('type', $type);
+	  	$this->db->where('name', $name);
+		$auth_data = $this->db->get('Auth');
+		
+		$d = new stdClass;
+		$d->error = FALSE;
+		
+		if($auth_data->num_rows() == 1){
+		  foreach ($auth_data->result() as $value) {
+			$d = $value;
+		  }
+		}else{
+			$d->error = TRUE;
+			$d->message = 'Nothing returned!';
+		}	
+		return $d;
+		exit;
+	}
+	/**
+	 * Login user
+	 */
 	public function login($post_data){
+	  	
+	  $type = 'login';
+	  // Post data
+	  $this->username = $post_data->username;
+	  $this->password = $post_data->password;
+		  
+	  if($this->allow_login()){
 			
-		// New returnable obj	
-		$return_data = new stdClass;
+		$return_data = $this->get_page_data($type, 'login');
+		$return_data->post_data = $post_data;		
 		$return_data->login_valid = FALSE;
-        $return_data->post_data = $post_data;
-		$return_data->error_code = '500.1';
-		$return_data->error_message = 'Login';
-		$return_data->theme = '';
-		$return_data->page  = 'login';
 		  
 		if(!isset($post_data) || !isset($post_data->username) || !isset($post_data->password)){
+		  $return_data = $this->get_page_data($type, 'invalid_post_data');
+		  $return_data->post_data = $post_data;	
 		  $return_data->login_valid = FALSE;
-		  $return_data->post_data = $post_data;
-		  $return_data->error_code = '500.2';
-		  $return_data->error_message = 'Invalid data type!';
-		  $return_data->theme = '';
-		  $return_data->page  = '';
 		  return $return_data;
 		  exit;
 		}else{
 		
 		  // Check if login is allowed	
 		  if(!$this->allow_login()){
-			$return_data->login_valid = FALSE;
+		    $return_data = $this->get_page_data($type, 'login_disabled');
 		    $return_data->post_data = $post_data;
-		    $return_data->error_code = '500.3';
-		    $return_data->error_message = 'Login Disabled!';
-		    $return_data->theme = '';
-		    $return_data->page  = 'login_disabled';
+		    $return_data->login_valid = FALSE;
 			return $return_data;
 			exit;
 		  }else{
-		  	
-		  // Post data
-		  $this->username = $post_data->username;
-		  $this->password = $post_data->password;
 
 		    // Check if account is registered
 		    if(!$this->is_account_registered()){
-		      $return_data->login_valid = FALSE;	
+		      $return_data = $this->get_page_data($type, 'not_registered');
 		      $return_data->post_data = $post_data;
-		      $return_data->error_code = '500.4';
-		      $return_data->error_message = 'Account not registered!';
-		      $return_data->theme = '';
-		      $return_data->page  = 'register';
+		      $return_data->login_valid = FALSE;
 			  return $return_data;
 			  exit;
 		    }	
 					    			
 		    // Check if account is active
 		    if(!$this->is_account_active()){
-		      $return_data->login_valid = FALSE;	
+		      $return_data = $this->get_page_data($type, 'account_activate');
 		      $return_data->post_data = $post_data;
-		      $return_data->error_code = '500.5';
-		      $return_data->error_message = 'Account not active!';
-		      $return_data->theme = '';
-		      $return_data->page  = 'account_activate';
+		      $return_data->login_valid = FALSE;
 			  return $return_data;
 			  exit;
 		    }
 
 			// Check if user account is locked
 		  	if($this->is_account_locked()){
-		  	  $return_data->login_valid = FALSE;
+		      $return_data = $this->get_page_data($type, 'account_locked');
 		      $return_data->post_data = $post_data;
-		      $return_data->error_code = '500.6';
-		      $return_data->error_message = 'Account is locked!';
-		      $return_data->theme = '';
-		      $return_data->page  = 'account_locked';
+		      $return_data->login_valid = FALSE;
 			  return $return_data;
 			  exit;
 		  	}
 			
 			// Check if user account is valid
 		  	if(!$this->validate_user()){
-		  	  $return_data->login_valid = FALSE;
+		      $return_data = $this->get_page_data($type, 'password_incorrect');
 		      $return_data->post_data = $post_data;
-		      $return_data->error_code = '500.7';
-		      $return_data->error_message = 'Account password incorect!';
-		      $return_data->theme = '';
-		      $return_data->page  = 'login';
+		      $return_data->login_valid = FALSE;
 			  return $return_data;
 			  exit;
+
 		  	}else{
 		  		
-		  	  // Log them in	
-			  $this->auth_set_session_data();
-		  	  $return_data->login_valid = TRUE;
-		  	  $return_data->post_data = $post_data;
-			  $return_data->error_code = '500.8';
-			  $return_data->error_message = 'Login';
-			  $return_data->theme = '';
-			  $return_data->page = '';
-			  return $return_data;
-			  exit; 
+		  	  // Try to Log them in	
+			  if(!$this->auth_set_session_data()){
+		        $return_data = $this->get_page_data($type, 'no_session_data');
+		        $return_data->post_data = $post_data;
+		        $return_data->login_valid = FALSE;
+			    return $return_data;
+				exit;
+			  }else{
+		        $return_data = $this->get_page_data($type, 'logged_in');
+		        $return_data->post_data = $post_data;
+		        $return_data->login_valid = TRUE;
+			    return $return_data;
+				exit;
+			  }
+			  
 		  	}
 			
 		  }
@@ -338,6 +350,7 @@ class Auth_model extends CI_Model{
 		}
 		
 		return $return_data;
+	  }
 		exit;
 	}
 	
