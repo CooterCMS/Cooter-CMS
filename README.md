@@ -2,8 +2,7 @@ Open Source CMS
 
 Live version available here: http://cootercms.blogsyte.com
 
-/*
- * Login
- */
+## Login ##
+
 User: slimjim
 Password: password
