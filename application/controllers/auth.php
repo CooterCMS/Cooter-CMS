@@ -64,47 +64,43 @@ class Auth extends CI_Controller{
 	 */		
    public function login(){
 		
+	// Post data
 	$post_data = new stdClass;
-
-   	// Set Form Submit	 
-	$this->auth_model->set_form_submit('Login');
+	$post_data->username 	= $this->input->post('username');
+	$post_data->password 	= $this->input->post('password');
+	$post_data->recaptcha_challenge_field = $this->input->post('recaptcha_challenge_field');
+	$post_data->recaptcha_response_field  = $this->input->post('recaptcha_response_field');
+	//$post_data->remember_me = $this->input->post('remember_me');
 	
-	  if($this->is_logged_in){
+    if($this->is_logged_in){
 
-		show_404();
-
-	  }
-	  
-	  if($this->auth_model->allow_login()){
-
+	  show_404();
+	  exit;
+	}
+	  // Login Disabled	
+	  if(!$this->auth_model->allow_login()){
+	  	// Load the theme	
+		$this->theme_model->load_theme('default');
+		$template_data = $this->template->load($this->template->get_template_dir().'login_disabled');
+		$this->load->view($template_data->template, $template_data);
+		
+		
+	  }else{
+			
+		// Set Form Submit	 
+		$this->auth_model->set_form_submit('Login');
 		// Check if we need reCaptcha form validations
-		$recaptcha = '';
-		if($this->login_count > 1){
-			
-			$recaptcha = recaptcha();
-			$resp = recaptcha_check_answer(
-					$this->config->item('recaptcha_private_key'),
-					$_SERVER["REMOTE_ADDR"],
-					$this->input->post('recaptcha_challenge_field'),
-					$this->input->post('recaptcha_response_field')
-					);
-			
-			if($resp->is_valid != TRUE){
-				$this->form_validation->set_rules(
-			'recaptcha_challenge_field', 'ReCaptcha Challenge Field', 'required|matches[recaptcha_response_field]'
-				);
-				$this->form_validation->set_rules(
-			'recaptcha_response_field', 'ReCaptcha Response Field', 'required'
-				);	
-			}
-		}		
-	
-		// Post data
-		$post_data = new stdClass;
-		$post_data->username 	= $this->input->post('username');
-		$post_data->password 	= $this->input->post('password');
-		//$post_data->remember_me = $this->input->post('remember_me');
-	
+		$recaptcha = ($this->login_count > 1) ? $this->auth_model->index('recaptcha', $post_data) : '';
+
+		if($recaptcha){
+		$this->form_validation->set_rules(
+		'recaptcha_challenge_field', 'ReCaptcha Challenge Field', 'required|matches[recaptcha_response_field]'
+			);
+		$this->form_validation->set_rules(
+		'recaptcha_response_field', 'ReCaptcha Response Field', 'required'
+			);
+		}
+		
 		// If the form is called directly, display the login form
 		if(!$this->input->post()){
 			// Load the theme	
@@ -146,30 +142,28 @@ class Auth extends CI_Controller{
 					
 			  // Try to login user
 			  
-			  
 				// Login user 		
-				$return_data = $this->auth_model->login($post_data);					
+				$return_data = $this->auth_model->index('login',$post_data);
 				
-				// Load the theme	
-				$this->theme_model->load_theme($return_data->theme);   
-				$template_data = $this->template->load($this->template->get_template_dir().$return_data->page);
-				$this->load->view($template_data->template, $template_data);
-
+  				if(!$return_data->login_valid){
+				  // Load the theme	
+				  $this->theme_model->load_theme();
+			  	  $template_data = $this->template->load($this->template->get_template_dir().$return_data->page);
+			  	  $this->load->view($template_data->template, $template_data);
+				}else{
+				  redirect(base_url().$return_data->page);
+				}
+				
 			}// End form Validataion
 	
 		}// End if NOT POST
 	
-	  }else{
-	  	 // Login Disabled
-	  	
-	  	// Load the theme	
-		$this->theme_model->load_theme('default');
-		$template_data = $this->template->load($this->template->get_template_dir().'login_disabled');
-		$this->load->view($template_data->template, $template_data);
-		
 	  }
 
 	}
+function test(){
+	var_dump($this->options_model->get_option('allow_login'));
+} 
 	/**
 	 * Destroy's the current user session
 	 * 
