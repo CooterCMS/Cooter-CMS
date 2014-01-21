@@ -45,33 +45,42 @@ class Options_model extends CI_Model{
 		
 		$this->set_default_page();
 		$this->set_default_post();
-	
 	}
 	/**
-	* Get options
-	* option = (int)/(string)
+	* Get options returns and array or an array containing multiple object(s)  
+	 * @return array  
 	*/
-	public function get_option($option = FALSE, $option_type = NULL){
-	
-	// Set option type 	
-	$this->_option_type = ($option_type == NULL) ? $this->_option_type : $option_type;
+	public function get_option($option_name='', $option_type='', $method_name=''){
+
 	// Array to store data	
 	$return_data = array();
+
+	// Set the option type
+	$this->_option_type = ($option_type) ? $option_type : 'System';
 	  
-	  // Get option by type
-	  if(($option == FALSE) && ($option_type !== NULL)){
-	  	$return_data = $this->get_option_by_type($this->_option_type);
+	  // Returns the data from method if method exsits
+	  if($method_name && method_exists($this->options_model, $method_name)){
+	    return $this->$method_name($option_name, $this->_option_type);		
+	  	  exit;
 	  }
+	  // Get option by type
+	  if(!$option_name && $option_type){
+		return $this->get_option_by_type($this->_option_type);
+		  exit;
+	  }	  	  
 	  // Get option by int
-	  if(ctype_digit($option)){
-	    $return_data = $this->get_option_by_id($option, $this->_option_type);
+	  if(ctype_digit($option_name)){
+	    return $this->get_option_by_id($option_name, $this->_option_type);
+	      exit;
 	  }
 	  // Get option by name	
-	  if(!ctype_digit($option) && ($option !== FALSE)){
-	    $return_data = $this->get_option_by_name($option, $this->_option_type);
+	  if(!ctype_digit($option_name) && (!empty($option_name))){
+	    return $this->get_option_by_name($option_name, $this->_option_type);
+		  exit;
 	  }
 	  
 	  return $return_data;
+	  exit;
 	}
 
 	/**
@@ -88,12 +97,15 @@ class Options_model extends CI_Model{
 		
 		if($page_data->num_rows() > 0){
 			foreach ($page_data->result() as $key => $value) {
+				$return_data[$key] = $value->response = TRUE;	
 				$return_data[$key] = $value;
 			}
 		}else{
-			$return_data['response'] = false;
-			$return_data['error_code'] = '300';
-			$return_data['error'] = 'Option(s) not found with that type.';
+			$error_data = new stdClass;	
+			$error_data->response = false;
+			$error_data->error_code = '300';
+			$error_data->error = 'Option(s) not found with that type.';
+			$return_data[] = $error_data;
 		}	
 	
 		return $return_data;
@@ -106,19 +118,22 @@ class Options_model extends CI_Model{
 		// Get Page data	
 		$this->db->where('option_type', $option_type);
 		$this->db->where('idOption', $option);
-		$page_data = $this->db->get($this->_db_table, 1);
+		$page_data = $this->db->get($this->_db_table);
 
 		//Store results in an array
 		$return_data = array();
 		
 		if($page_data->num_rows() == 1){
 			foreach ($page_data->result() as $key => $value) {
+				$return_data[$key] = $value->response = TRUE;
 				$return_data[$key] = $value;
 			}
 		}else{
-			$return_data['response'] = false;
-			$return_data['error_code'] = '301';
-			$return_data['error'] = 'Option not found with that id.';
+			$error_data = new stdClass;
+			$error_data->response = TRUE;
+			$error_data->error_code = '301';
+			$error_data->error = 'Option not found with that id.';
+			$return_data[] = $error_data;
 		}	
 	
 		return $return_data;
@@ -126,24 +141,26 @@ class Options_model extends CI_Model{
 	/**
 	 * Get option by option name
 	 */
-	private function get_option_by_name($option, $option_type){
+	private function get_option_by_name($option_name){
 	  
 		// Get Page data
-		$this->db->where('option_name', $option);
-		$this->db->where('option_type', $option_type);
-		$page_data = $this->db->get($this->_db_table, 1);
+		$this->db->where('option_name', $option_name);
+		$page_data = $this->db->get($this->_db_table);
 
 		//Store results in an array
 		$return_data = array();
 		
 		if($page_data->num_rows() == 1){
 			foreach ($page_data->result() as $key => $value) {
+				$return_data[$key] = $value->response = TRUE;
 				$return_data[$key] = $value;
 			}
 		}else{
-			$return_data['response'] = false;
-			$return_data['error_code'] = '302';
-			$return_data['error'] = 'Option not found by that name.';
+			$error_data = new stdClass;
+			$error_data->response = false;
+			$error_data->error_code = '302';
+			$error_data->error = 'Option not found by that name.';
+			$return_data[] = $error_data;
 		}	
 	
 		return $return_data;
