@@ -44,13 +44,20 @@
  */
 
 class Auth_model extends CI_Model{
-	
+	// Session
 	private $is_logged_in 	= FALSE;
-	private $ci_session_id  = NULL;
-	
+	private $ci_session_id  = FALSE;
+	// User info
 	private $username		= NULL;
 	private $password		= NULL;
 	private $password_hash	= NULL;
+	//Recaptcha
+	private $recaptcha_challenge_field = NULL;
+	private $recaptcha_response_field  = NULL;
+	private $recaptcha_private_key = NULL;
+	private $recaptcha_enabled = FALSE;
+	 
+	private $remote_address	= NULL;
 	
 	private $password_crypted = FALSE;
 	private $validate_user	  = FALSE;
@@ -74,6 +81,65 @@ class Auth_model extends CI_Model{
 		 */
 		//$this->is_admin = $this->is_admin($this->session->userdata('username'));
 	}
+	
+	public function index($action, $data = FALSE){
+					
+	  if($data && method_exists($this->auth_model, $action)){
+		return $this->$action($data);
+		exit;
+	  }else{
+	  	return $this->$action();
+		exit;
+	  }
+		
+	} 
+	private function attributes_to_string($attributes=''){
+		
+		
+	}
+	/**
+	 * Recaptcha
+	 */
+	private function recaptcha($post_data){
+	 	
+	 // Check if recaptcha is enabled 	
+	 $option_data = $this->options_model->get_option('recaptcha_enabled','Auth');		
+	 // Check the returned value
+	 if(isset($option_data[0]->option_value)){
+	   $this->recaptcha_enabled = $option_data[0]->option_value;
+	 }else{
+	   $this->recaptcha_enabled = FALSE;
+	 }
+	 
+	  if(!$this->recaptcha_enabled){
+	  	return FALSE;
+		  exit;
+	  }else{
+	  	
+	  $this->recaptcha_challenge_field = $post_data->recaptcha_challenge_field;
+	  $this->recaptcha_response_field  = $post_data->recaptcha_response_field;
+	  $this->recaptcha_private_key 	   = $this->config->item('recaptcha_private_key');
+	  $this->remote_address 		   = $_SERVER["REMOTE_ADDR"];
+	
+		$recaptcha = recaptcha();
+		$resp = recaptcha_check_answer(
+				$this->recaptcha_private_key,
+				$this->remote_address,
+				$this->recaptcha_challenge_field,
+				$this->recaptcha_response_field
+				);
+
+		if($resp->is_valid != TRUE){
+			return $recaptcha;
+			exit;
+		}else{
+			return FALSE;
+			exit;
+		}
+			
+	  }
+	  
+	}
 	/**
 	 * php.net
 	 */
@@ -85,25 +151,40 @@ class Auth_model extends CI_Model{
 	 */
 	public function allow_register(){
 		$data = $this->options_model->get_option('allow_register');
-		return $this->strictBool($data[0]->option_value);
+		if(isset($data[0]->option_value)){
+		  return $this->strictBool($data[0]->option_value);
+		  exit;
+		}else{
+		  return FALSE;
+		  exit;
+		}	
 	} 
 	/**
 	 * Allow Login
 	 */
 	public function allow_login(){
 		$data = $this->options_model->get_option('allow_login');
-		return $this->strictBool($data[0]->option_value);
+		if(isset($data[0]->option_value)){
+		  return $this->strictBool($data[0]->option_value);
+		  exit;
+		}else{
+		  return FALSE;
+		  exit;
+		}
+		
 	} 
 		
 	public function is_logged_in(){
        $is_logged_in = $this->session->userdata('is_logged_in');
 	
        if(!isset($is_logged_in) || $is_logged_in !== true){
-        	$this->is_logged_in = FALSE;
-		    return FALSE;
+         $this->is_logged_in = FALSE;
+		 return FALSE;
+		 exit;
        }else{
-			$this->is_logged_in = TRUE;
-			return TRUE;
+		 $this->is_logged_in = TRUE;
+		 return TRUE;
+		 exit;
  	   }
     }
 	
@@ -160,6 +241,7 @@ class Auth_model extends CI_Model{
 		  
 		}
 	}
+	
 	private function is_account_locked(){
 		if($this->username){
 			
@@ -227,12 +309,18 @@ class Auth_model extends CI_Model{
 	 * Set the user session data
 	 */ 
 	private function auth_set_session_data(){
-		if(isset($this->username)){
+			
+		if(!isset($this->username)){
+			return FALSE;
+			exit;
+		}else{
 	  	  $new_data = array(
 	  	   	'username' => $this->username,
 	        'is_logged_in' => TRUE
 	      );
 	      $this->session->set_userdata($new_data);
+		  return TRUE;
+		  exit;
 		}
 	}
 	/**
@@ -261,22 +349,23 @@ class Auth_model extends CI_Model{
 	/**
 	 * Login user
 	 */
-	public function login($post_data){
+	private function login($post_data){
 	  	
+	  //$post_data = isset($post_data) ? $post_data : FALSE;	
+	  // Page data type		  	
 	  $type = 'login';
 	  // Post data
-	  $this->username = $post_data->username;
-	  $this->password = $post_data->password;
+	  $this->username = isset($post_data->username) ? $post_data->username : '';
+	  $this->password = isset($post_data->password) ? $post_data->password : '';
 		  
 	  if($this->allow_login()){
 			
 		$return_data = $this->get_page_data($type, 'login');
-		$return_data->post_data = $post_data;		
+		$return_data->post_data = $post_data;
 		$return_data->login_valid = FALSE;
 		  
 		if(!isset($post_data) || !isset($post_data->username) || !isset($post_data->password)){
 		  $return_data = $this->get_page_data($type, 'invalid_post_data');
-		  $return_data->post_data = $post_data;	
 		  $return_data->login_valid = FALSE;
 		  return $return_data;
 		  exit;
@@ -285,7 +374,6 @@ class Auth_model extends CI_Model{
 		  // Check if login is allowed	
 		  if(!$this->allow_login()){
 		    $return_data = $this->get_page_data($type, 'login_disabled');
-		    $return_data->post_data = $post_data;
 		    $return_data->login_valid = FALSE;
 			return $return_data;
 			exit;
@@ -294,7 +382,6 @@ class Auth_model extends CI_Model{
 		    // Check if account is registered
 		    if(!$this->is_account_registered()){
 		      $return_data = $this->get_page_data($type, 'not_registered');
-		      $return_data->post_data = $post_data;
 		      $return_data->login_valid = FALSE;
 			  return $return_data;
 			  exit;
@@ -303,7 +390,6 @@ class Auth_model extends CI_Model{
 		    // Check if account is active
 		    if(!$this->is_account_active()){
 		      $return_data = $this->get_page_data($type, 'account_activate');
-		      $return_data->post_data = $post_data;
 		      $return_data->login_valid = FALSE;
 			  return $return_data;
 			  exit;
@@ -312,7 +398,6 @@ class Auth_model extends CI_Model{
 			// Check if user account is locked
 		  	if($this->is_account_locked()){
 		      $return_data = $this->get_page_data($type, 'account_locked');
-		      $return_data->post_data = $post_data;
 		      $return_data->login_valid = FALSE;
 			  return $return_data;
 			  exit;
@@ -321,7 +406,6 @@ class Auth_model extends CI_Model{
 			// Check if user account is valid
 		  	if(!$this->validate_user()){
 		      $return_data = $this->get_page_data($type, 'password_incorrect');
-		      $return_data->post_data = $post_data;
 		      $return_data->login_valid = FALSE;
 			  return $return_data;
 			  exit;
@@ -331,13 +415,11 @@ class Auth_model extends CI_Model{
 		  	  // Try to Log them in	
 			  if(!$this->auth_set_session_data()){
 		        $return_data = $this->get_page_data($type, 'no_session_data');
-		        $return_data->post_data = $post_data;
 		        $return_data->login_valid = FALSE;
 			    return $return_data;
 				exit;
 			  }else{
 		        $return_data = $this->get_page_data($type, 'logged_in');
-		        $return_data->post_data = $post_data;
 		        $return_data->login_valid = TRUE;
 			    return $return_data;
 				exit;
