@@ -161,9 +161,7 @@ class Auth extends CI_Controller{
 	  }
 
 	}
-function test(){
-	var_dump($this->options_model->get_option('allow_login'));
-} 
+
 	/**
 	 * Destroy's the current user session
 	 * 
